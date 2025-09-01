@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Movie {
 
-	private int moiveId;
+	private int movieId;
 	private String title;
 	private String director;
 	private String genre;
@@ -16,10 +16,20 @@ public class Movie {
 	public Movie() {
 		super();
 	}
-	public Movie(int moiveId, String title, String director, String genre, Date releaseDate, int rating, int duration,
+	public Movie(int movieId, String title, String director, String genre, int rating, int duration, int boxOffice) {
+		super();
+		this.movieId = movieId;
+		this.title = title;
+		this.director = director;
+		this.genre = genre;
+		this.rating = rating;
+		this.duration = duration;
+		this.boxOffice = boxOffice;
+	}
+	public Movie(int movieId, String title, String director, String genre, Date releaseDate, int rating, int duration,
 			int boxOffice) {
 		super();
-		this.moiveId = moiveId;
+		this.movieId = movieId;
 		this.title = title;
 		this.director = director;
 		this.genre = genre;
@@ -28,11 +38,11 @@ public class Movie {
 		this.duration = duration;
 		this.boxOffice = boxOffice;
 	}
-	public int getMoiveId() {
-		return moiveId;
+	public int getMovieId() {
+		return movieId;
 	}
-	public void setMoiveId(int moiveId) {
-		this.moiveId = moiveId;
+	public void setMovieId(int movieId) {
+		this.movieId = movieId;
 	}
 	public String getTitle() {
 		return title;
@@ -52,6 +62,12 @@ public class Movie {
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
+	public void setReleaseDate(Date releaseDate) {
+		this.releaseDate = releaseDate;
+	}
 	public int getRating() {
 		return rating;
 	}
@@ -70,19 +86,9 @@ public class Movie {
 	public void setBoxOffice(int boxOffice) {
 		this.boxOffice = boxOffice;
 	}
-	
-	
-	public Date getReleaseDate() {
-		return releaseDate;
-	}
-	public void setReleaseDate(Date releaseDate) {
-		this.releaseDate = releaseDate;
-	}
-	
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(boxOffice, director, duration, genre, moiveId, rating, releaseDate, title);
+		return Objects.hash(boxOffice, director, duration, genre, movieId, rating, releaseDate, title);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -94,12 +100,12 @@ public class Movie {
 			return false;
 		Movie other = (Movie) obj;
 		return boxOffice == other.boxOffice && Objects.equals(director, other.director) && duration == other.duration
-				&& Objects.equals(genre, other.genre) && moiveId == other.moiveId && rating == other.rating
+				&& Objects.equals(genre, other.genre) && movieId == other.movieId && rating == other.rating
 				&& Objects.equals(releaseDate, other.releaseDate) && Objects.equals(title, other.title);
 	}
 	@Override
 	public String toString() {
-		return "Movie [moiveId=" + moiveId + ", title=" + title + ", director=" + director + ", genre=" + genre
+		return "Movie [movieId=" + movieId + ", title=" + title + ", director=" + director + ", genre=" + genre
 				+ ", releaseDate=" + releaseDate + ", rating=" + rating + ", duration=" + duration + ", boxOffice="
 				+ boxOffice + "]";
 	}
