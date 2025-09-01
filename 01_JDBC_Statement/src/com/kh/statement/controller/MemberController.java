@@ -64,4 +64,14 @@ public class MemberController {
 			// 요청 처리 후 결과값을 View에게 반환ㄴ
 			return member;
 		}
+		
+		public List<Member> findByKeyword(String keyword) {
+			// 결과값이 나중에 어떻게 돌아올까??
+			// SELECT -> ResultSet -> Member(필드)-> List<Member>
+			
+			List<Member> members = new MemberDao().findByKeyword(keyword);
+			
+			return members;
+		
+		}
 }

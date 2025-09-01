@@ -23,6 +23,27 @@ public class MemberView {
 	 * 프로그램 구동 시 사용자에게 메인화면을 출력해주는 메소드입니다.
 	 */
 	public void mainMenu() {
+		
+		/*
+		 * 2025 / 09 / 01 오늘의 실습 겸 숙제
+		 *
+		 * 금요일 숙제 3번 --> 나만의 테이블 만들기
+		 *
+		 * 나만의 테이블에 INSERT
+		 * 전체 조회
+		 * 유니크제약조건 걸려있는 컬럼으로 조회
+		 * LIKE키워드 써서 조회하는거
+		 *
+		 * --> 요게 쫌 부담인데..?
+		 *
+		 * 2번 --> PLANT테이블만들기 한걸로
+		 *
+		 * 나만의 테이블에 INSERT
+		 * 전체 조회
+		 * 유니크제약조건 걸려있는 컬럼으로 조회
+		 * LIKE키워드 써서 조회하는거
+		 */
+		
 		while (true) {
 			System.out.println("----- 회원 관리 프로그램 -----");
 			System.out.println("1. 회원 추가");
@@ -46,6 +67,7 @@ public class MemberView {
 				findById();
 				break;
 			case 4:
+				findByKeyword();
 				break;
 			case 5:
 				break;
@@ -154,6 +176,23 @@ public class MemberView {
 		}else {
 			System.out.println("존재하지 않는 아이디 입니다. ");
 			
+		}
+	}
+	
+	private void findByKeyword() {
+		
+		System.out.print("\n회원 이름 키워드로 검색");
+		System.out.print("검색하고자 하는 키워드를 입력해주세요 > ");
+		String keyword = sc.nextLine();
+		
+		List<Member> members = mc.findByKeyword(keyword);
+		if(members.isEmpty()) {
+			System.out.println("조회 결과가 존재하지 않습니다. ");
+		} else {
+			for(int i = 0; i < members.size(); i++) {
+				System.out.println((i + 1) + "번 째 조회 결과!");
+				System.out.println(members.get(i).toString());
+			}
 		}
 	}
 }
