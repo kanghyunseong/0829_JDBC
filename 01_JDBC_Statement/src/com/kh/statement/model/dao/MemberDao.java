@@ -303,10 +303,9 @@ public class MemberDao {
 				       FROM
 				            MEMBER
 				      WHERE
-				            USERID ='
+				            USERID =
 				     """;
-		sql += userId + "'";
-		
+		sql += "'" + userId + "'";
 		try {
 			// 1) JDBC Driver등록
 			Class.forName("oracle.jdbc.driver.OracleDriver");
