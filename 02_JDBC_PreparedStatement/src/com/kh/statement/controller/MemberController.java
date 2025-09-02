@@ -62,7 +62,7 @@ public class MemberController {
 			// 2. 요청처리 => DAO 객체 생성 후 메소드 호출
 			Member member = new MemberDao().findById(userId);
 			
-			// 요청 처리 후 결과값을 View에게 반환ㄴ
+			// 요청 처리 후 결과값을 View에게 반환
 			return member;
 		}
 		
