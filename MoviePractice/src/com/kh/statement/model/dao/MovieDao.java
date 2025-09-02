@@ -2,33 +2,59 @@ package com.kh.statement.model.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kh.statement.model.DTO.MovieDTO;
 import com.kh.statement.model.vo.Movie;
 
 public class MovieDao {
+	
+	private final String DRIVER = "oracle.jdbc.driver.OracleDriver";
+	private final String URL = "jdbc:oracle:thin:@115.90.212.20:10000:XE";
+	private final String USERNAME = "KHS02";
+	private final String PASSWORD = "KHS021234";
 
 	public int save(Movie movie) {
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		int result = 0;
 
-		String sql = "INSERT INTO MOVIE VALUES (" + movie.getMovieId() + ", '" + movie.getTitle() + "', '"
-				+ movie.getDirector() + "', '" + movie.getGenre() + "', " + "SYSDATE, " + movie.getRating() + ", "
-				+ movie.getDuration() + ", " + movie.getBoxOffice() + ")";
-
+		String sql = """
+						INSERT
+						  INTO
+						       MOVIE
+						 VALUES 
+						        (
+						        ?
+						      , ?
+						      , ?
+						      , ?
+						      , ?
+						      , ?
+						      , ?
+						      , ?
+						        )
+				     """;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Class.forName(DRIVER);
 
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.20:10000:XE", "KHS02", "KHS021234");
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, movie.getMovieId());
+			pstmt.setString(2, movie.getTitle());
+			pstmt.setString(3, movie.getDirector());
+			pstmt.setString(4, movie.getGenre());
+			pstmt.setInt(5, movie.getRating());
+			pstmt.setInt(6, movie.getDuration());
+			pstmt.setInt(7, movie.getBoxOffice());
 
-			result = stmt.executeUpdate(sql);
+			result = pstmt.executeUpdate();
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -37,8 +63,8 @@ public class MovieDao {
 		} finally {
 
 			try {
-				if (stmt != null) {
-					stmt.close();
+				if (pstmt != null) {
+					pstmt.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -58,7 +84,7 @@ public class MovieDao {
 	public List<Movie> findAll() {
 
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 
 		List<Movie> movies = new ArrayList<>();
@@ -80,16 +106,17 @@ public class MovieDao {
 					      MOVIE_ID DESC
 				""";
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Class.forName(DRIVER);
 
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.20:10000:XE", "KHS02", "KHS021234");
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
-			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(sql);
 
-			rset = stmt.executeQuery(sql);
+			rset = pstmt.executeQuery();
 
 			while (rset.next()) {
 				Movie movie = new Movie();
+				
 				movie.setMovieId(rset.getInt("MOVIE_ID"));
 				movie.setTitle(rset.getString("TITLE"));
 				movie.setDirector(rset.getString("DIRECTOR"));
@@ -109,8 +136,8 @@ public class MovieDao {
 		} finally {
 
 			try {
-				if (stmt != null) {
-					stmt.close();
+				if (pstmt != null) {
+					pstmt.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -128,8 +155,12 @@ public class MovieDao {
 	}
 
 	public Movie findByTitle(String title) {
+		
 		Movie movie = null;
-
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
 		String sql = """
 					SELECT
 					       MOVIE_ID
@@ -143,73 +174,90 @@ public class MovieDao {
 					 FROM
 					      MOVIE
 					WHERE
-					      TITLE =
-				""";
-		sql += "'" + title + "'";
-
+					      TITLE = ?
+				    """;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			try (Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.20:10000:XE", "KHS02",
-					"KHS021234"); Statement stmt = conn.createStatement(); ResultSet rset = stmt.executeQuery(sql)) {
-
-				if (rset.next()) {
-					movie = new Movie(rset.getInt("MOVIE_ID"), rset.getString("TITLE"), rset.getString("DIRECTOR"),
-							rset.getString("GENRE"), rset.getDate("RELEASE_DATE"), rset.getInt("RATING"),
-							rset.getInt("DURATION"), rset.getInt("BOX_OFFICE"));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+			
+			Class.forName(DRIVER);
+			
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, title);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				movie = new Movie(rset.getInt("MOVIE_ID")
+						        , rset.getString("TITLE")
+						        , rset.getString("DIRECTOR")
+						        , rset.getString("GENRE")
+						        , rset.getDate("RELEASE_DATE")
+						        , rset.getInt("RATING")
+						        , rset.getInt("DURATION")
+						        , rset.getInt("BOX_OFFICE"));
 			}
+			
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return movie;
 	}
 
 	public List<Movie> findByKeyword(String keyword) {
-		// 0) 필요한 변수들
+		
 		List<Movie> movies = new ArrayList();
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 
-		String sql =
-			    "SELECT MOVIE_ID, TITLE, DIRECTOR, GENRE, RELEASE_DATE, RATING, DURATION, BOX_OFFICE " +
-			    "FROM MOVIE " +
-			    "WHERE TITLE LIKE '%" + keyword + "%' " +
-			    "ORDER BY MOVIE_ID DESC";
-
-
-
+		String sql = """
+				SELECT
+				       MOVIE_ID
+				     , TITLE
+				     , DIRECTOR
+				     , GENRE
+				     , RELEASE_DATE
+				     , RATING
+				     , DURATION
+				     , BOX_OFFICE
+				 FROM
+				       MOVIE
+				 WHERE
+				       TITLE LIKE '%' || ? || '%'
+				 ORDER
+				    BY
+				        MOVIE_ID DESC
+				     """; 
 		try {
-			// 1) JDBC Driver 등록
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Class.forName(DRIVER);
 
-			// 2) Connection 객체 생성
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@115.90.212.20:10000:XE", "KHS02", "KHS021234");
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
-			// 3) Statement 객체 생성
-			stmt = conn.createStatement();
-
-			// 4, 5) SQL문 실행 후 결과 받아오기
-			rset = stmt.executeQuery(sql);
-
-			// 6) ResultSet객체에서 각 행에 접근하면서
-			// 조회 결과가 있다면 컬럼의 값을 뽑아서 VO객체에 필드에 대입한 뒤
-			// List의 요소로 추가함
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			
+			rset = pstmt.executeQuery();
 
 			while (rset.next()) {
-				movies.add(new Movie(rset.getInt("MOVIE_ID"), rset.getString("TITLE"), rset.getString("DIRECTOR"),
-						rset.getString("GENRE"), rset.getDate("RELEASE_DATE"), rset.getInt("RATING"),
-						rset.getInt("DURATION"), rset.getInt("BOX_OFFICE")));
+				
+				movies.add(new Movie(rset.getInt("MOVIE_ID")
+				         , rset.getString("TITLE")
+				         , rset.getString("DIRECTOR")
+				         , rset.getString("GENRE")
+				         , rset.getDate("RELEASE_DATE")
+				         , rset.getInt("RATING")
+				         , rset.getInt("DURATION")
+				         , rset.getInt("BOX_OFFICE")));
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// 7) 자원반납 => 생성된 순서의 역순으로 close()를 호출
 		}
 		try {
 			if (rset != null) {
@@ -219,8 +267,8 @@ public class MovieDao {
 			e.printStackTrace();
 		}
 		try {
-			if (stmt != null) {
-				stmt.close();
+			if (pstmt != null) {
+				pstmt.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -232,8 +280,110 @@ public class MovieDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// 8) 결과 반환
 		return movies;
 	}
 
+	public int update(MovieDTO md) {
+		Connection conn =  null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		String sql = """
+						UPDATE
+				              MOVIE
+				          SET
+				              TITLE = ?
+				        WHERE 
+				              TITLE = ?
+				     """;
+		try {
+			Class.forName(DRIVER);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			pstmt = conn.prepareStatement(sql);
+			
+			conn.setAutoCommit(false);
+			
+			pstmt.setString(1, md.getNewTitle());
+			pstmt.setString(2, md.getTitle());
+			
+			
+			result = pstmt.executeUpdate();
+			if(result > 0) {
+				conn.commit();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if(conn != null) {
+					conn.close();
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	public int delete(Movie movie) {
+		
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = """
+						DELETE 
+						  FROM
+						        MOVIE
+			             WHERE
+			                    TITLE = ?
+				     """;
+		
+		try {
+			Class.forName(DRIVER);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			pstmt = conn.prepareStatement(sql);
+			
+			conn.setAutoCommit(false);
+			
+			pstmt.setString(1, movie.getTitle());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 }

@@ -1,8 +1,8 @@
 package com.kh.statement.controller;
 
+import java.sql.Date;
 import java.util.List;
 
-import com.kh.statement.model.DTO.MovieDTO;
 import com.kh.statement.model.dao.MovieDao;
 import com.kh.statement.model.vo.Movie;
 
@@ -31,33 +31,12 @@ public class MovieController {
 	}
 	
 	public List<Movie> findByKeyword(String keyword) {
+		// 결과값이 나중에 어떻게 돌아올까??
+		// SELECT -> ResultSet -> Member(필드)-> List<Member>
 		
 		List<Movie> members = new MovieDao().findByKeyword(keyword);
 		
 		return members;
 	
-	}
-
-	public int update(String title, String newTitle) {
-		
-		MovieDTO md = new MovieDTO(title, newTitle);
-		
-		int result = new MovieDao().update(md);
-		
-		return result;
-	}
-
-	public int delete(String title) {
-		
-		Movie movie = new Movie();
-		movie.setTitle(title);
-		
-		
-		// 2) 요청 처리
-		int result = new MovieDao().delete(movie);
-		
-		// 3) 결과반환
-		
-		return result;
 	}
 }

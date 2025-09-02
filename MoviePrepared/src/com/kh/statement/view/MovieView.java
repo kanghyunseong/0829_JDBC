@@ -1,7 +1,6 @@
 package com.kh.statement.view;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Scanner;
@@ -21,8 +20,6 @@ public class MovieView {
 		System.out.println("2. 영화 전체 조회 ");
 		System.out.println("3. 영화 이름으로 검색 ");
 		System.out.println("4. 키워드로 검색하기 ");
-		System.out.println("5. 영화 정보 수정하기");
-		System.out.println("6. 영화 삭제하기");
 		System.out.print("메뉴를 선택해주세요 > ");
 		int menuNo = sc.nextInt();
 		sc.nextLine();
@@ -40,14 +37,6 @@ public class MovieView {
 		case 4:
 			findByKeyword();
 			break;
-		case 5:
-			update();
-			break;
-		case 6 :
-			delete();
-			break;
-		case 0:
-			return;
 		}
 
 	}
@@ -141,51 +130,21 @@ public class MovieView {
 			System.out.println("존재하지 않는 영화입니다.");
 		}
 	}
-
-	private void findByKeyword() {
-
+	
+private void findByKeyword() {
+		
 		System.out.print("\n영화 이름 키워드로 검색");
 		System.out.print("검색하고자 하는 키워드를 입력해주세요 > ");
 		String keyword = sc.nextLine();
-
+		
 		List<Movie> movies = mc.findByKeyword(keyword);
-		if (movies.isEmpty()) {
+		if(movies.isEmpty()) {
 			System.out.println("조회 결과가 존재하지 않습니다. ");
 		} else {
-			for (int i = 0; i < movies.size(); i++) {
+			for(int i = 0; i < movies.size(); i++) {
 				System.out.println((i + 1) + "번 째 조회 결과!");
 				System.out.println(movies.get(i).toString());
 			}
-		}
-	}
-	private void update() {
-		
-		System.out.println("\n영화제목 수정하기");
-		System.out.print("수정하고자 하는 영화 제목을 입력해주세요 > ");
-		String title = sc.nextLine();
-		
-		System.out.print("바꿀 영화 제목을 입력해라 > ");
-		String newTitle = sc.nextLine();
-		
-		int result = mc.update(title, newTitle);
-		
-		if (result > 0) {
-			System.out.println("영화 제목 변경 성공");
-		} else {
-			System.out.println("에잉 쯧쯧 ");
-		}
-	}
-	private void delete() {
-		System.out.println("안녕히가세요 ~ ");
-		System.out.print("삭제할 영화제목 > ");
-		String title = sc.nextLine();
-		
-		int result = mc.delete(title);
-	
-		if(result > 0) {
-			System.out.println("성공했습니다.");
-		} else {
-			System.out.println("실패했습니다.");
 		}
 	}
 
