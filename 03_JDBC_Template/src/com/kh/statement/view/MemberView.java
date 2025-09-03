@@ -3,6 +3,7 @@ package com.kh.statement.view;
 import java.util.List;
 import java.util.Scanner;
 
+import com.kh.board.view.BoardView;
 import com.kh.statement.controller.MemberController;
 import com.kh.statement.model.vo.Member;
 
@@ -45,6 +46,8 @@ public class MemberView {
 			System.out.println("4. 회원 이름 키워드로 조회");
 			System.out.println("5. 회원 정보 변경");
 			System.out.println("6. 회원 탈퇴");
+			System.out.println("7. 게시판 서비스로 이동!");
+			System.out.println("9. 프로그램 종료");
 			System.out.print("메뉴를 선택해주세요 > ");
 			int menuNo = sc.nextInt();
 			sc.nextLine();
@@ -68,6 +71,8 @@ public class MemberView {
 			case 6:
 				delete();
 				break;
+			case 7:
+				new BoardView().mainMenu();
 			case 9:
 				System.out.println("프로그램을 종료합니다.");
 				return;
@@ -208,17 +213,17 @@ public class MemberView {
 			System.out.println("비밀번호도 모르냐 에잉 쯧쯧 ");
 		}
 	}
-	
+
 	private void delete() {
 		System.out.println("안녕히가세요 ~ ");
 		System.out.print("아이디 주세요 > ");
 		String userId = sc.nextLine();
-		System.out.print("비밀번호 주세요 > " );
+		System.out.print("비밀번호 주세요 > ");
 		String userPwd = sc.nextLine();
-		
+
 		int result = mc.delete(userId, userPwd);
-	
-		if(result > 0) {
+
+		if (result > 0) {
 			System.out.println("성공했습니다.");
 		} else {
 			System.out.println("실패했습니다.");
