@@ -33,9 +33,9 @@ public class MovieController {
 	
 	public List<Movie> findByKeyword(String keyword) {
 		
-		List<Movie> members = new MovieService().findByKeyword(keyword);
+		List<Movie> movies = new MovieService().findByKeyword(keyword);
 		
-		return members;
+		return movies;
 	
 	}
 
@@ -51,6 +51,7 @@ public class MovieController {
 	public int delete(String title) {
 		
 		Movie movie = new Movie();
+		
 		movie.setTitle(title);
 		
 		int result = new MovieService().delete(movie);

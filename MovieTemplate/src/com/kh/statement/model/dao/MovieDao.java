@@ -240,7 +240,7 @@ public class MovieDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+			JDBCTemplate.close(pstmt);
 		}
 		return result;
 	}
@@ -248,6 +248,7 @@ public class MovieDao {
 	public int delete(Connection conn, Movie movie) {
 		
 		int result = 0;
+		
 		PreparedStatement pstmt = null;
 		
 		String sql = """

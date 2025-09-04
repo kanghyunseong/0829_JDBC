@@ -1,11 +1,15 @@
 package com.kh.statement.model.dao;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.Properties;
 
 import com.kh.common.JDBCTemplate;
 import com.kh.statement.model.DTO.PasswordDTO;
@@ -13,29 +17,28 @@ import com.kh.statement.model.vo.Member;
 
 public class MemberDao {
 
+	private Properties prop = new Properties();
+	
+	// 메소드 호출할때마다
+	// xml파일로부터 Properties객체로 입력받는 코드를 써야함 중복이다.
+	// new MemberDao().XXX
+	
+	public MemberDao() {
+		try {
+			prop.loadFromXML(new FileInputStream("resource/member-mapper.xml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int save(Connection conn, Member member) {
 
 		// 0) 필요한 변수세팅 ~~
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = """
-						INSERT
-						  INTO
-						       MEMBER
-						VALUES
-						        (
-						        SEQ_USERNO.NEXTVAL
-						      , ?
-						      , ?
-						      , ?
-						      , ?
-						      , SYSDATE
-						        )
-				     """;
-
-		// 1) Driver등록 -> 하고옴
-		// 2) Connection -> 하고옴
 		
+		String sql = prop.getProperty("save");
+
 		try {
 			pstmt = conn.prepareStatement(sql);
 			// 3_2) 미완성된 SQL문일 경우 묶어줄 값 전달하기
@@ -63,20 +66,8 @@ public class MemberDao {
 		List<Member> members = new ArrayList();
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = """
-					SELECT
-					       USERNO
-					     , USERID
-					     , USERPWD
-					     , USERNAME
-					     , EMAIL
-					     , ENROLLDATE
-					  FROM
-					       MEMBER
-					 ORDER
-					    BY
-					       ENROLLDATE DESC
-				""";
+		
+		String sql = prop.getProperty("findAll");
 		
 		// 3_1)
 		try {
@@ -116,19 +107,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
-		String sql = """
-						SELECT
-						       USERNO
-						     , USERID
-						     , USERPWD
-						     , USERNAME
-						     , EMAIL
-						     , ENROLLdATE
-						 FROM
-						       MEMBER
-						WHERE
-						       USERID = ?
-				""";
+		String sql = prop.getProperty("findById");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -150,7 +129,6 @@ public class MemberDao {
 			JDBCTemplate.close(rset);
 			JDBCTemplate.close(pstmt);
 		}
-		
 		return member;
 	}
 
@@ -159,22 +137,11 @@ public class MemberDao {
 		List<Member> members = new ArrayList();
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String sql = """
-					SELECT
-					       USERNO
-					     , USERID
-					     , USERPWD
-					     , USERNAME
-					     , MEAIL
-					     , ENROLLDATE
-					  FROM
-					       MEMBER
-					 WHERE
-					       USERNAME LIKE '%'||?||'%'
-				""";
+		
+		String sql = prop.getProperty("findByKeyword");
 		
 		try {
-			conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, keyword);
 			rset = pstmt.executeQuery();
 			while(rset.next()) {
@@ -184,6 +151,7 @@ public class MemberDao {
 								  , rset.getString("USERNAME")
 								  , rset.getString("EMAIL")
 								  , rset.getDate("ENROLLDATE")));
+				
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -191,7 +159,6 @@ public class MemberDao {
 			JDBCTemplate.close(rset);
 			JDBCTemplate.close(pstmt);
 		}
-		
 		return members;
 	}
 
@@ -200,15 +167,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		
-		String sql = """
-				      UPDATE
-				         SET
-				             USERPWD = ?
-				       WHERE
-				             USERID = ?
-				         AND
-				             USERPWD = ?
-				""";
+		String sql = prop.getProperty("update");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -233,15 +192,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		
-		String sql = """
-					DELETE
-					  FROM
-					       MEMBER
-					 WHERE
-					       USERID = ?
-					   AND
-					       USERPWD = ?
-					""";
+		String sql = prop.getProperty("delete");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);

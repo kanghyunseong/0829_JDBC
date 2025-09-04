@@ -52,19 +52,34 @@ public class MovieService {
 	}
 
 	public List<Movie> findByKeyword(String keyword) {
-		return null;
+		
+		List<Movie> movies = new MovieDao().findByKeyword(conn, keyword);
+		
+		close(conn);
+		
+		return movies;
 		
 		
-	}
+	}	
 
 	public int delete(Movie movie) {
-		return 0;
+		
+		int result = new MovieDao().delete(conn, movie);
+		
+		close(conn);
+		
+		return result;
 		
 		
 	}
 
 	public int update(MovieDTO md) {
-		return 0;
+		
+		int result = new MovieDao().update(conn, md);
+		
+		close(conn);
+		
+		return result;
 	}
 	
 }
