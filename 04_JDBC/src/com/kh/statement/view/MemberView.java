@@ -56,7 +56,7 @@ public class MemberView {
 			case 1:
 				save();
 				break;
-			case 2:
+			case 2: 
 				findAll();
 				break;
 			case 3:
