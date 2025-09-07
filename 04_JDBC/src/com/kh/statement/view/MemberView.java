@@ -72,7 +72,7 @@ public class MemberView {
 				delete();
 				break;
 			case 7:
-				new BoardView().mainMenu();
+				new CustomerView().mainMenu();
 			case 9:
 				System.out.println("프로그램을 종료합니다.");
 				return;
