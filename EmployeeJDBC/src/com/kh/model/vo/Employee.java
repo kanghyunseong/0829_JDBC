@@ -35,6 +35,15 @@ public class Employee {
 	
 	
 
+	public Employee(String empId, String empName, String empNo, String jobCode, String salLevel) {
+		super();
+		this.empId = empId;
+		this.empName = empName;
+		this.empNo = empNo;
+		this.jobCode = jobCode;
+		this.salLevel = salLevel;
+	}
+
 	public Employee(String empId, String empName, int salary) {
 		super();
 		this.empId = empId;

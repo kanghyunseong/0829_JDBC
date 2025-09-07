@@ -23,7 +23,8 @@ public class EmployeeView {
 			System.out.println("5. 급여가 높은 상위 다섯명 조회");
 			System.out.println("6. 급여가 낮은 하위 다섯명 조회");
 			System.out.println("7. 사원 추가 기능");
-			System.out.println("8. 사원 퇴사 기능");
+			System.out.println("8. 사원 정보 수정 기능");
+			System.out.println("9. 사원 퇴사 기능");
 			System.out.println("0. 프로그램 종료");
 
 			System.out.print("메뉴 선택하기 > ");
@@ -48,14 +49,22 @@ public class EmployeeView {
 				costTop();
 				break;
 			case 6:
+				costBottom();
 				break;
 			case 7:
+				save();
 				break;
 			case 8:
+				update();
+				break;
+			case 9:
+				delete();
 				break;
 			case 0:
+				System.out.println("프로그램을 종료합니다.");
 				return;
 			default:
+				System.out.println("잘못된 선택입니다. ");
 				break;
 			}
 
@@ -124,14 +133,14 @@ public class EmployeeView {
 	}
 
 	private void findByEmpId() {
-		
+
 		System.out.println("사원 상세 조회");
 		System.out.print("사번을 입력해주세요 > ");
 		String empId = sc.nextLine();
-		
+
 		Employee employee = ec.findByEmpId(empId);
-		
-		if(employee != null) {
+
+		if (employee != null) {
 			System.out.println("===========================");
 			System.out.print("사번 : " + employee.getEmpId());
 			System.out.print(", 사원명 : " + employee.getEmpName());
@@ -145,16 +154,94 @@ public class EmployeeView {
 	}
 
 	private void costTop() {
-	    System.out.println("====================");
-	    System.out.println("급여 상위 5명");
+		System.out.println("====================");
+		System.out.println("급여 상위 5명");
 
-	    List<Employee> employeeList = ec.costTop();
+		List<Employee> employeeList = ec.costTop();
 
-	    for (Employee emp : employeeList) {
-	        System.out.println("사번: " + emp.getEmpId() 
-	                         + ", 이름: " + emp.getEmpName() 
-	                         + ", 급여: " + emp.getSalary());
+		for (Employee emp : employeeList) {
+			System.out.println("사번: " + emp.getEmpId() + ", 이름: " + emp.getEmpName() + ", 급여: " + emp.getSalary());
 
-	    }
+		}
+	}
+
+	private void costBottom() {
+
+		System.out.println("===================");
+		System.out.println("급여 하위 5명");
+
+		List<Employee> employeeList = ec.costBottom();
+
+		for (Employee emp : employeeList) {
+			System.out.println("사번: " + emp.getEmpId() + ", 이름: " + emp.getEmpName() + ", 급여: " + emp.getSalary());
+		}
+	}
+
+	private void save() {
+		System.out.println(" 사원 추가 메뉴 ");
+		System.out.print("사원 번호를 입력해주세요 > ");
+		String empId = sc.nextLine();
+
+		System.out.print("사원 이름을 입력해주세요 > ");
+		String empName = sc.nextLine();
+
+		System.out.print("사원의 주민번호를 입력해주세요 > ");
+		String empNo = sc.nextLine();
+
+		System.out.print("사원의 직급코드를 입력해주세요 > ");
+		String jobCode = sc.nextLine();
+
+		System.out.print("사원의 급여 등급을 입력해주세요 > ");
+		String salLevel = sc.nextLine();
+
+		int result = ec.save(empId, empName, empNo, jobCode, salLevel);
+
+		if (result > 0) {
+			System.out.println("저장 완료");
+		} else {
+			System.out.println("저장 실패");
+		}
+	}
+
+	private void update() {
+		System.out.println("=======================================");
+		System.out.println("사원 정보 수정 메뉴");
+		
+		System.out.print("사번을 입력하세요 > ");
+		String empId = sc.nextLine();
+		
+		System.out.print("변경할 부서코드를 입력하세요 > ");
+		String deptCode = sc.nextLine();
+		
+		System.out.print("변경할 직급코드를 입력하세요 > ");
+		String jobCode = sc.nextLine();
+		
+		System.out.print("변경할 급여를 입력하세요 > ");
+		int salary = sc.nextInt();
+		sc.nextLine();
+
+		int result = ec.update(empId, deptCode, jobCode, salary);
+		
+		if (result > 0) {
+			System.out.println("정보수정에 성공하셨습니다");
+		} else {
+			System.out.println("정보수정에 실패하셨습니다");
+		}
+	}
+
+	private void delete() {
+
+		System.out.println("사원 삭제 기능");
+		
+		System.out.print("삭제하실 사원의 사번을 입력하시오 > ");
+		String empId = sc.nextLine();
+		
+		int result = ec.delete(empId);
+		
+		if(result > 0) {
+			System.out.println("삭제 성공 ");
+		} else {
+			System.out.println("삭제 실패 ");
+		}
 	}
 }

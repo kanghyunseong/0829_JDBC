@@ -73,45 +73,100 @@
 	
 	<entry key="costTop">
 		SELECT
-			   EMP_ID
+		       EMP_ID
 		     , EMP_NAME
 		     , SALARY
-		FROM
-		     (SELECT 
-		     		 EMP_ID
-		           , EMP_NAME
-		           , SALARY
-		        FROM 
-		             EMPLOYEE
-		       ORDER   
-		          BY
-		             SALARY DESC) 
-		WHERE
-		      ROWNUM &lt;= 5
+		FROM (
+		        SELECT 
+		               EMP_ID
+		             , EMP_NAME
+		             , SALARY
+		        FROM EMPLOYEE
+		        WHERE SALARY > 0 
+		        ORDER BY SALARY DESC
+		     )
+		WHERE ROWNUM &lt;= 5
 	</entry>
 	
-	<entry key="">
-	
+	<entry key="costBottom">
+		SELECT
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		 FROM (
+		        SELECT 
+		               EMP_ID
+		             , EMP_NAME
+		             , SALARY
+		          FROM 
+		               EMPLOYEE
+		         WHERE 
+		               SALARY > 0 
+		         ORDER 
+		            BY 
+		               SALARY ASC
+		     )
+		 WHERE 
+		       ROWNUM &lt;= 5
 	</entry>
 	
-	<entry key="">
-	
+	<entry key="save">
+		INSERT 
+		  INTO 
+		       EMPLOYEE
+		       (
+		       EMP_ID
+		     , EMP_NAME
+		     , EMP_NO
+		     , EMAIL
+		     , PHONE
+		     , DEPT_CODE
+		     , JOB_CODE
+		     , SAL_LEVEL
+		     , SALARY
+		     , BONUS
+		     , MANAGER_ID
+		     , HIRE_DATE
+		     , ENT_DATE
+		     , ENT_YN
+		       )
+		VALUES
+		       (
+		       ?
+		     , ?
+		     , ?
+		     , NULL
+		     , NULL
+		     , NULL
+		     , ?
+		     , ?
+		     , NULL
+		     , NULL
+		     , NULL
+		     , SYSDATE
+		     , NULL
+		     , 'N'
+		       )
 	</entry>
 	
-	<entry key="">
-	
+	<entry key="update">
+		UPDATE 
+			   EMPLOYEE
+		   SET
+			   SALARY = ?     
+			 , DEPT_CODE = ?
+			 , JOB_CODE = ?
+		 WHERE
+			   EMP_ID = ?
 	</entry>
 	
-	<entry key="">
-	
+	<entry key="delete">
+		UPDATE
+			   EMPLOYEE
+		   SET
+		       ENT_DATE = SYSDATE
+		     , ENT_YN = 'Y'
+		 WHERE
+		       EMP_ID = ?
 	</entry>
-	
-	<entry key="">
-	
-	</entry>
-	
-	<entry key="">
-	
-	</entry>
-
 </properties>
