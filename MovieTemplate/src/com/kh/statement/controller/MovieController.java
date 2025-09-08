@@ -2,8 +2,7 @@ package com.kh.statement.controller;
 
 import java.util.List;
 
-import com.kh.statement.model.DTO.MovieDTO;
-import com.kh.statement.model.dao.MovieDao;
+import com.kh.statement.model.dto.MovieDTO;
 import com.kh.statement.model.vo.Movie;
 import com.kh.statement.service.MovieService;
 

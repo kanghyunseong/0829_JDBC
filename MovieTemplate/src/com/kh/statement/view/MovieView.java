@@ -15,39 +15,42 @@ public class MovieView {
 	private MovieController mc = new MovieController();
 
 	public void mainMenu() {
-		System.out.println("--- 영화 검색 ---");
+		while (true) {
 
-		System.out.println("1. 영화 추가 하기 ");
-		System.out.println("2. 영화 전체 조회 ");
-		System.out.println("3. 영화 이름으로 검색 ");
-		System.out.println("4. 키워드로 검색하기 ");
-		System.out.println("5. 영화 정보 수정하기");
-		System.out.println("6. 영화 삭제하기");
-		System.out.print("메뉴를 선택해주세요 > ");
-		int menuNo = sc.nextInt();
-		sc.nextLine();
+			System.out.println("--- 영화 검색 ---");
 
-		switch (menuNo) {
-		case 1:
-			save();
-			break;
-		case 2:
-			findAll();
-			break;
-		case 3:
-			findByTitle();
-			break;
-		case 4:
-			findByKeyword();
-			break;
-		case 5:
-			update();
-			break;
-		case 6 :
-			delete();
-			break;
-		case 0:
-			return;
+			System.out.println("1. 영화 추가 하기 ");
+			System.out.println("2. 영화 전체 조회 ");
+			System.out.println("3. 영화 이름으로 검색 ");
+			System.out.println("4. 키워드로 검색하기 ");
+			System.out.println("5. 영화 정보 수정하기");
+			System.out.println("6. 영화 삭제하기");
+			System.out.print("메뉴를 선택해주세요 > ");
+			int menuNo = sc.nextInt();
+			sc.nextLine();
+
+			switch (menuNo) {
+			case 1:
+				save();
+				break;
+			case 2:
+				findAll();
+				break;
+			case 3:
+				findByTitle();
+				break;
+			case 4:
+				findByKeyword();
+				break;
+			case 5:
+				update();
+				break;
+			case 6:
+				delete();
+				break;
+			case 0:
+				return;
+			}
 		}
 
 	}
@@ -158,31 +161,33 @@ public class MovieView {
 			}
 		}
 	}
+
 	private void update() {
-		
+
 		System.out.println("\n영화제목 수정하기");
 		System.out.print("수정하고자 하는 영화 제목을 입력해주세요 > ");
 		String title = sc.nextLine();
-		
+
 		System.out.print("바꿀 영화 제목을 입력해라 > ");
 		String newTitle = sc.nextLine();
-		
+
 		int result = mc.update(title, newTitle);
-		
+
 		if (result > 0) {
 			System.out.println("영화 제목 변경 성공");
 		} else {
 			System.out.println("에잉 쯧쯧 ");
 		}
 	}
+
 	private void delete() {
 		System.out.println("안녕히가세요 ~ ");
 		System.out.print("삭제할 영화제목 > ");
 		String title = sc.nextLine();
-		
+
 		int result = mc.delete(title);
-	
-		if(result > 0) {
+
+		if (result > 0) {
 			System.out.println("성공했습니다.");
 		} else {
 			System.out.println("실패했습니다.");

@@ -1,85 +1,90 @@
 package com.kh.statement.service;
 
-import static com.kh.common.JDBCTemplate.close;
-import static com.kh.common.JDBCTemplate.commit;
-
-import java.sql.Connection;
 import java.util.List;
 
-import com.kh.common.JDBCTemplate;
-import com.kh.statement.model.DTO.MovieDTO;
-import com.kh.statement.model.dao.MovieDao;
+import org.apache.ibatis.session.SqlSession;
+
+import com.kh.common.Template;
+import com.kh.statement.model.dao.MovieDAO;
+import com.kh.statement.model.dto.MovieDTO;
 import com.kh.statement.model.vo.Movie;
 
 public class MovieService {
 
-	private Connection conn = null;
+	private MovieDAO movieDao = new MovieDAO();
 
-	public MovieService() {
-		super();
-		this.conn = JDBCTemplate.getConnection();
-	}
-	
 	public int save(Movie movie) {
-		
-		int result = new MovieDao().save(conn, movie);
-	
+
+		SqlSession session = Template.getSqlSeeion();
+
+		int result = movieDao.save(session, movie);
+
 		if (result > 0) {
-			commit(conn);
+			session.commit();
 		}
-		JDBCTemplate.close(conn);
+
+		session.close();
+
 		return result;
-		
 	}
 
 	public List<Movie> findAll() {
-		
-		List<Movie> movies = new MovieDao().findAll(conn);
-		
-		close(conn);
-		
-		return movies;
 
-		
+		SqlSession session = Template.getSqlSeeion();
+
+		List<Movie> movie = movieDao.findAll(session);
+
+		session.close();
+
+		return movie;
 	}
 
 	public Movie findByTitle(String title) {
-		
-		Movie movie = new MovieDao().findByTitle(conn, title);
-		
+
+		SqlSession session = Template.getSqlSeeion();
+
+		Movie movie = movieDao.findByTitle(session, title);
+
+		session.close();
+
 		return movie;
-		
 	}
 
 	public List<Movie> findByKeyword(String keyword) {
-		
-		List<Movie> movies = new MovieDao().findByKeyword(conn, keyword);
-		
-		close(conn);
-		
-		return movies;
-		
-		
-	}	
 
-	public int delete(Movie movie) {
-		
-		int result = new MovieDao().delete(conn, movie);
-		
-		close(conn);
-		
-		return result;
-		
-		
+		SqlSession session = Template.getSqlSeeion();
+
+		List<Movie> movie = movieDao.findByKeyword(session, keyword);
+
+		session.close();
+
+		return movie;
 	}
 
 	public int update(MovieDTO md) {
-		
-		int result = new MovieDao().update(conn, md);
-		
-		close(conn);
-		
+
+		SqlSession session = Template.getSqlSeeion();
+
+		int result = movieDao.update(session, md);
+
+		if (result > 0) {
+			session.commit();
+		}
+
+		session.close();
+
 		return result;
 	}
-	
+
+	public int delete(Movie movie) {
+
+		SqlSession session = Template.getSqlSeeion();
+		int result = movieDao.delete(session, movie);
+
+		if (result > 0) {
+			session.commit();
+		}
+		return result;
+	}
+
 }

@@ -1,4 +1,4 @@
-package com.kh.statement.model.DTO;
+package com.kh.statement.model.dto;
 
 import java.sql.Date;
 
