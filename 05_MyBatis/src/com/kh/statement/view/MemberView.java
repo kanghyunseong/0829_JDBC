@@ -3,6 +3,7 @@ package com.kh.statement.view;
 import java.util.List;
 import java.util.Scanner;
 
+import com.kh.board.view.BoardView;
 import com.kh.statement.controller.MemberController;
 import com.kh.statement.model.vo.Member;
 
@@ -71,7 +72,7 @@ public class MemberView {
 				delete();
 				break;
 			case 7:
-				new MemberView().mainMenu();
+				new BoardView().mainMenu();
 			case 9:
 				System.out.println("프로그램을 종료합니다.");
 				return;
@@ -176,7 +177,7 @@ public class MemberView {
 
 	private void findByKeyword() {
 
-		System.out.print("\n회원 이름 키워드로 검색");
+		System.out.print("\n회원 아이디 키워드로 검색");
 		System.out.print("검색하고자 하는 키워드를 입력해주세요 > ");
 		String keyword = sc.nextLine();
 
