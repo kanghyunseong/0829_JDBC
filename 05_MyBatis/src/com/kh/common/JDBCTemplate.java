@@ -33,7 +33,7 @@ public class JDBCTemplate {
 			
 			Properties prop = new Properties();
 			
-			prop.load(new FileInputStream("resource/driver.properties")); //Inpurstream을 열어서 외부에서 입력 받기 가능
+			prop.load(new FileInputStream("resources/driver.properties")); //Inpurstream을 열어서 외부에서 입력 받기 가능
 			
 			//String keyA = prop.getProperty("A");
 			//System.out.println("A 키값의 Value : " + keyA);

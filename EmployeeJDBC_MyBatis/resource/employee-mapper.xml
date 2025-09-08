@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employeeMapper">
+	<insert id="findAll" 
+			parameterType="string">
+		SELECT
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		     , DEPT_TITLE
+		     , JOB_NAME
+		  FROM
+		       EMPLOYEE
+		  JOIN
+		       JOB USING (JOB_CODE)
+		  JOIN 
+		       DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+	</insert>
+	
+	<insert id="findByDept" 
+			parameterType="string">
+		SELECT 
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		     , DEPT_TITLE
+		     , JOB_NAME
+		 FROM
+		       EMPLOYEE
+		 JOIN  
+		       DEPARTMENT ON (DEPT_ID = DEPT_CODE)
+		 JOIN 
+		       JOB USING (JOB_CODE)
+		WHERE
+		       DEPT_TITLE = #{deptTitle}
+	</insert>
+	
+</mapper>
