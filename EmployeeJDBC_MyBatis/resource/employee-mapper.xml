@@ -3,8 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="employeeMapper">
-	<insert id="findAll" 
-			parameterType="string">
+
+
+	<resultMap id="employeeResult" type="com.kh.model.vo.Employee">
+		<result property="empId" column="EMP_ID" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="salary" column="SALARY" />
+		<result property="deptCode" column="DEPT_TITLE" /> 
+		<result property="jobCode" column="JOB_NAME" />
+	</resultMap>
+	
+	<select id="findAll" 
+			resultMap="employeeResult">
+			
 		SELECT
 		       EMP_ID
 		     , EMP_NAME
@@ -17,10 +28,19 @@
 		       JOB USING (JOB_CODE)
 		  JOIN 
 		       DEPARTMENT ON (DEPT_CODE = DEPT_ID)
-	</insert>
+	</select>
 	
-	<insert id="findByDept" 
-			parameterType="string">
+	
+	<resultMap id="employeeResultByDept" type="com.kh.model.vo.Employee">
+		<result property="empId" column="EMP_ID" />
+		<result property="empName" column="EMP_NAME" />
+		<result property="salary" column="SALARY" />
+		<result property="deptCode" column="DEPT_TITLE" /> 
+		<result property="jobCode" column="JOB_NAME" />
+	</resultMap>
+	
+	<select id="findByDept" 
+			resultMap="employeeResultByDept">
 		SELECT 
 		       EMP_ID
 		     , EMP_NAME
@@ -35,6 +55,143 @@
 		       JOB USING (JOB_CODE)
 		WHERE
 		       DEPT_TITLE = #{deptTitle}
+	</select>
+	
+	<select id="findByJob"
+			resultMap="employeeResult">
+		SELECT        
+		       E.EMP_ID
+		     , E.EMP_NAME
+		     , E.SALARY
+		     , D.DEPT_TITLE
+		     , J.JOB_NAME
+		  FROM
+		       EMPLOYEE E
+		     , JOB J
+		     , DEPARTMENT D
+		WHERE
+		       D.DEPT_ID = E.DEPT_CODE 
+		  AND
+		       J.JOB_CODE = E.JOB_CODE 
+		  AND
+		       J.JOB_NAME = #{jobName}
+	</select>
+	
+	<select id="findByEmpId"
+			resultMap="employeeResult">
+		SELECT
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		     , DEPT_TITLE
+		     , JOB_NAME
+		FROM
+		       EMPLOYEE E
+		JOIN  
+		       DEPARTMENT D ON (D.DEPT_ID = E.DEPT_CODE)
+		JOIN 
+		       JOB USING (JOB_CODE)
+		WHERE
+		       EMP_ID = #{empId}
+	</select>
+	
+	<select id="costTop" 
+			resultMap="employeeResult">
+		SELECT
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		FROM (
+		        SELECT 
+		        EMP_ID
+		      , EMP_NAME
+		      , SALARY
+			FROM 
+			    EMPLOYEE
+		  WHERE SALARY > 0 
+		        ORDER BY SALARY DESC
+		     )
+		WHERE ROWNUM &lt;= 5
+	</select>
+	
+	<select id="costBottom"
+			resultMap="employeeResult">
+		SELECT
+		       EMP_ID
+		     , EMP_NAME
+		     , SALARY
+		 FROM (
+		        SELECT 
+		               EMP_ID
+		             , EMP_NAME
+		             , SALARY
+		          FROM 
+		               EMPLOYEE
+		         WHERE 
+		               SALARY > 0 
+		         ORDER 
+		            BY 
+		               SALARY ASC
+		     )
+		 WHERE 
+		       ROWNUM &lt;= 5
+	</select>
+	
+    <insert id="save" parameterType="com.kh.model.vo.Employee">
+    INSERT INTO EMPLOYEE (
+        EMP_ID,
+        EMP_NAME,
+        EMP_NO,
+        EMAIL,
+        PHONE,
+        DEPT_CODE,
+        JOB_CODE,
+        SAL_LEVEL,
+        SALARY,
+        BONUS,
+        MANAGER_ID,
+        HIRE_DATE,
+        ENT_DATE,
+        ENT_YN
+    ) VALUES (
+        #{empId},
+        #{empName},
+        #{empNo},
+        NULL,    
+        NULL,   
+        NULL,    
+        #{jobCode},
+        #{salLevel},
+        NULL,   
+        NULL,    
+        NULL,    
+        SYSDATE,
+        NULL,    
+        'N'
+    )
 	</insert>
+
+	<update id="update"
+			parameterType="com.kh.model.dto.EmployeeDTO">
+		UPDATE 
+			   EMPLOYEE
+		   SET
+			   SALARY = #{salary}     
+			 , DEPT_CODE = #{deptCode}
+			 , JOB_CODE = #{jobCode}
+		 WHERE
+			   EMP_ID = #{empId}
+	</update>
+	
+	<update id="delete"
+			parameterType="com.kh.model.vo.Employee">
+		UPDATE
+			   EMPLOYEE
+		   SET
+		       ENT_DATE = SYSDATE
+		     , ENT_YN = 'Y'
+		 WHERE
+		       EMP_ID = #{empId}
+	</update>
 	
 </mapper>

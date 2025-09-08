@@ -1,6 +1,5 @@
 package com.kh.run;
 
-import com.kh.common.JDBCTemplate;
 import com.kh.common.Template;
 import com.kh.view.EmployeeView;
 
@@ -14,3 +13,4 @@ public class EmployeeRun {
 		ec.mainMenu();
 	}
 }
+ 

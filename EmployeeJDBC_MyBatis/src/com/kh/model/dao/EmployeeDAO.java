@@ -20,11 +20,39 @@ public class EmployeeDAO {
 
 	public static List<Employee> findAll(SqlSession session) {
 		
-		return session.selectList("employeeMapper.findByAll");
+		return session.selectList("employeeMapper.findAll");
 	}
 
-	public List<Employee> findByDept(SqlSession session) {
-		return session.selectList("employeeMapper.findByDept");
+	public List<Employee> findByDept(SqlSession session, String searchDept) {
+		return session.selectList("employeeMapper.findByDept", searchDept);
+	}
+
+	public List<Employee> findByJob(SqlSession session, String searchJob) {
+		return session.selectList("employeeMapper.findByJob", searchJob);
+	}
+
+	public Employee findByEmpId(SqlSession session, String empId) {
+		return session.selectOne("employeeMapper.findByEmpId", empId);
+	}
+
+	public List<Employee> costTop(SqlSession session) {
+		return session.selectList("employeeMapper.costTop");
+	}
+
+	public List<Employee> costBottom(SqlSession session) {
+		return session.selectList("employeeMapper.costBottom");
+	}
+
+	public int save(SqlSession session, Employee employee) {
+		return session.insert("employeeMapper.save", employee);
+	}
+
+	public int update(SqlSession session, EmployeeDTO dto) {
+		return session.update("employeeMapper.update", dto);
+	}
+
+	public int delete(SqlSession session, String empId) {
+		return session.delete("employeeMapper.delete", empId);
 	}
 	
 	

@@ -16,7 +16,7 @@
 		* SELECT일 경우
 		<select id="각SQL문의 식별자" parameterType="SQL문을 실행할 떄 필요한 자바타입" >
 			resultType="조회결과를 반환하는 자바타입" 또는
-			resultMap="조회결과를 반환할 resultMap의 id속성값">
+			resultMap="조회결과를 반환할 resultMap의값 id속성">
 			쿼리문
 		</select>
 		
